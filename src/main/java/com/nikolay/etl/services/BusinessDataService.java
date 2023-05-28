@@ -9,7 +9,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.*;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -32,6 +31,10 @@ public class BusinessDataService {
 
     @Transactional
     public void upsert(List<BusinessDataResponse> responseList) {
+        List<BusinessData> dataToInsert = businessDataMapper.mapResponseToEntity(responseList);
+/*      Не было уверенности что это решение оптимально, нужно проверить, как здесь работает кэширование hibernate.
+        Важное предположение, что репликация запускается не постоянно, а единоразово,
+        поэтому можно считать что список dataToUpdate будет незначительным по размеру, а в большинстве случаев пустым.
         Set<Long> ids = responseList.stream().map(BusinessDataResponse::getId).collect(Collectors.toSet());
         Map<Long, BusinessData> dataToUpdate = businessDataRepository.findAllById(ids).stream()
                 .collect(Collectors.toMap(BusinessData::getId, s -> s));
@@ -45,6 +48,7 @@ public class BusinessDataService {
             }
         }
         businessDataRepository.saveAll(dataToUpdate.values());
+  */
         businessDataRepository.saveAll(dataToInsert);
     }
 
