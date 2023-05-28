@@ -5,7 +5,7 @@ import lombok.Data;
 
 @Data
 @AllArgsConstructor
-public class MessageDto {
+public class EventMessageDto {
 
     private Long id;
     private String action;
